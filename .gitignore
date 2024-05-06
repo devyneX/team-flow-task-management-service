@@ -173,3 +173,4 @@ node_modules/
 static/css/output.css
 poetry.lock
 .idea/
+.zshrc
