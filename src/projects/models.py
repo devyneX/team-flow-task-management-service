@@ -1,7 +1,6 @@
-# import uuid
-
 from django.contrib.auth.models import User
 from django.db import models
+
 from src.core.models import BaseModel
 
 
@@ -48,6 +47,7 @@ class Role(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLES_CHOICES)
+
     # created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
