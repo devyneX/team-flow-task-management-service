@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 
-from .models import Project, Role, Task
+from src.projects.models import Project, Role, Task
 
 
 class ProjectModelTestCase(TestCase):
@@ -15,8 +15,16 @@ class ProjectModelTestCase(TestCase):
             username='testuser', password='testpassword'
         )
 
+        # Create a test project
+        self.project = Project.objects.create(
+            project_name='Test Project',
+            description='This is a test project',
+            created_by=self.user,
+            deadline=timezone.now() + timedelta(days=7)
+        )
+
     def test_create_project(self):
-        saved_project = Project.objects.get(project_name='Test Project')
+        saved_project = self.project
 
         # Check if the retrieved project matches the created project
         self.assertEqual(saved_project.project_name, 'Test Project')
@@ -40,10 +48,19 @@ class TaskModelTestCase(TestCase):
             deadline=timezone.now() + timedelta(days=7)
         )
 
-    def test_create_task(self):
+        # Create a test task
+        self.task = Task.objects.create(
+            task_name='Test Task',
+            task_state='todo',
+            project=self.project,
+            created_by=self.user,
+            assigned_to=self.user,
+            deadline=timezone.now() + timedelta(days=7),
+            details='This is a test task'
+        )
 
-        # Retrieve the created task from the database
-        saved_task = Task.objects.get(task_name='Test Task')
+    def test_create_task(self):
+        saved_task = self.task
 
         # Check if the retrieved task matches the created task
         self.assertEqual(saved_task.task_name, 'Test Task')
@@ -70,9 +87,13 @@ class RoleModelTestCase(TestCase):
             deadline=timezone.now() + timedelta(days=7)
         )
 
+        # Create a test role
+        self.role = Role.objects.create(
+            project=self.project, user=self.user, role='admin'
+        )
+
     def test_create_role(self):
-        # Retrieve the created role from the database
-        saved_role = Role.objects.get(user=self.user)
+        saved_role = self.role
 
         # Check if the retrieved role matches the created role
         self.assertEqual(saved_role.project, self.project)
