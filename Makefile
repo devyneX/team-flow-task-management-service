@@ -11,8 +11,8 @@ install:
 install-pre-commit:
 	poetry run pre-commit uninstall; poetry run pre-commit install
 
-.PHONY: lint
-lint:
+.PHONY: qa
+qa:
 	poetry run pre-commit run --all-files
 
 .PHONY: migrate
@@ -34,6 +34,18 @@ shell:
 .PHONY: superuser
 superuser:
 	poetry run python -m src.manage createsuperuser
+
+PHONY: test
+test:
+	poetry run coverage run -m src.manage test
+
+.PHONY: test-coverage
+test-coverage: test
+	poetry run coverage report
+
+.PHONY: test-cover-html
+test-cover-html: test
+	poetry run coverage html
 
 .PHONY: update
 update: install migrate install-pre-commit ;

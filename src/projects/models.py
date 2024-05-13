@@ -1,9 +1,9 @@
 from django.db import models
 
-from src.core.models import BaseModel, AuditModelMixin
+from src.core.models import AuditModelMixin, BaseModel
 
 
-class Project(BaseModel, AuditModelMixin):
+class Project(BaseModel, AuditModelMixin):  # type: ignore
     name = models.CharField(max_length=100)
     description = models.TextField()
     # created by inherited from AuditModelMixin does not work as owner as ownership can be transferred

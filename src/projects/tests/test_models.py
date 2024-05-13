@@ -1,19 +1,17 @@
 import uuid
 from datetime import timedelta
 
-from src.accounts.models import User
 from django.test import TestCase
 from django.utils import timezone
 
+from src.accounts.models import User
 from src.projects.models import Project
 
 
 class ProjectModelTestCase(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(
-            uuid_val=uuid.uuid4(), username='test', email='test@test.com'
-        )
+        self.user = User.objects.create_user(uuid_val=uuid.uuid4(), username='test', email='test@test.com')
 
     def test_create_project(self):
         project = Project.objects.create(

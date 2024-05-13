@@ -4,6 +4,7 @@ from django.contrib.auth.base_user import BaseUserManager
 
 
 class UserManager(BaseUserManager):
+
     def create_user(self, uuid_val, username, email, **extra_fields):
         if not uuid_val:
             raise ValueError('The UUID must be set')

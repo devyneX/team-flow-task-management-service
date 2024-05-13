@@ -11,9 +11,7 @@ class SoftDeletionManager(models.Manager):
 
 
 class BaseModel(models.Model):
-    uuid = models.UUIDField(
-        unique=True, default=uuid.uuid4, editable=False
-    )
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     deleted = models.BooleanField(default=False,
                                   verbose_name=_('deleted'))
 

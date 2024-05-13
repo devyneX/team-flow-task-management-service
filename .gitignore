@@ -170,6 +170,6 @@ cython_debug/
 
 
 node_modules/
-static/css/output.css
 poetry.lock
 .idea/
+static/
