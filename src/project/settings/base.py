@@ -65,16 +65,15 @@ WSGI_APPLICATION = 'src.project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tf-projects',
-        'USER': 'paperbound-pavillion',
-        'PASSWORD': 'paper1234',
-        'HOST': 'localhost',
+        'NAME': 'tf-auth-dev-db',
+        'USER': 'tf-dev',
+        'PASSWORD': 'tf-dev',
+        'HOST': 'db',
         'PORT': '5432',
         'ATOMIC_REQUESTS': True,
-        'CONN_MAX_AGE': 0,
+        'CONN_MAX_AGE': 0
     }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -111,9 +110,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ALLOWED_HOSTS = ['0.0.0.0']

@@ -1,14 +1,18 @@
-FROM python:3.12-slim-bullseye
-
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends --no-install-suggests \
-  build-essential default-libmysqlclient-dev \
-  && pip install --no-cache-dir --upgrade pip
-
+FROM python:3.12.3-alpine3.19
+ 
 WORKDIR /app
-COPY ./requirements.txt /app
-RUN pip install --no-cache-dir --requirement /app/requirements.txt
-COPY . /app
-
-EXPOSE 5000
-CMD ["python", "-m", "src.manage", "runserver"]
+ 
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ 
+RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+ 
+COPY requirements.txt /app/
+ 
+RUN pip install -r requirements.txt
+ 
+COPY . /app/
+ 
+RUN chmod +x /app/start.sh
+ 
+CMD ["sh", "/app/start.sh"]
