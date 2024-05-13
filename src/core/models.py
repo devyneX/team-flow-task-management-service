@@ -12,18 +12,13 @@ class SoftDeletionManager(models.Manager):
 
 class BaseModel(models.Model):
     uuid = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False
+        unique=True, default=uuid.uuid4, editable=False
     )
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      verbose_name=_('created_at'))
-    updated_at = models.DateTimeField(auto_now=True,
-                                      verbose_name=_('deleted_at'))
     deleted = models.BooleanField(default=False,
                                   verbose_name=_('deleted'))
 
     objects = SoftDeletionManager()
-    all_objects = models.Manager(
-    )  # Manager to access all objects, including soft-deleted ones
+    all_objects = models.Manager()
 
     def delete(self, using=None, keep_parents=False):
         self.deleted = True
@@ -31,6 +26,40 @@ class BaseModel(models.Model):
 
     def hard_delete(self):
         super().delete()
+
+    class Meta:
+        abstract = True
+
+
+class AuditTimeStampModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('created_at'))
+    updated_at = models.DateTimeField(auto_now=True, editable=False, verbose_name=_('updated_at'))
+
+    class Meta:
+        abstract = True
+
+
+class AuditUserModel(models.Model):
+    created_by = models.OneToOneField(
+        'accounts.User',
+        on_delete=models.CASCADE,
+        related_name='created_by',
+        related_query_name='created_by',
+        verbose_name=_('created_by')
+    )
+    updated_by = models.OneToOneField(
+        'accounts.User',
+        on_delete=models.CASCADE,
+        related_name='updated_by',
+        related_query_name='updated_by',
+        verbose_name=_('updated_by')
+    )
+
+    class Meta:
+        abstract = True
+
+
+class AuditModelMixin(AuditTimeStampModel, AuditUserModel):
 
     class Meta:
         abstract = True

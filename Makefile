@@ -1,5 +1,3 @@
-DOCKER_COMPOSE_COMMAND := $(shell command -v docker-compose 2> /dev/null || echo "docker compose")
-
 .PHONY: add-lib
 add-lib:
 	poetry add $(filter-out $@,$(MAKECMDGOALS))
