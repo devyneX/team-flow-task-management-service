@@ -11,7 +11,7 @@ from src.projects.models import Project
 class ProjectModelTestCase(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(uuid_val=uuid.uuid4(), username='test', email='test@test.com')
+        self.user = User.objects.create_user(uuid=uuid.uuid4(), username='test', email='test@test.com')
 
     def test_create_project(self):
         project = Project.objects.create(

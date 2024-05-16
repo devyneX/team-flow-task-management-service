@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 # Collect static files
 echo "Collect static files"

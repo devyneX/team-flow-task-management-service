@@ -1,14 +1,15 @@
+name: tf-tm
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    ports:
-      - 8002:8000
-    volumes:
-      - .:/app
-    depends_on:
-      - db
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - 8002:8000
+#    volumes:
+#      - .:/app
+#    depends_on:
+#      - db
   db:
     image: postgres:16.2-alpine
     restart: always
@@ -21,6 +22,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+networks:
+  default:
+    name: tf-network
+    external: true
 
 volumes:
   postgres_data:

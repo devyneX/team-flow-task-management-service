@@ -76,8 +76,8 @@ DATABASES = {
         'NAME': 'tf-tm-dev-db',
         'USER': 'tf-dev',
         'PASSWORD': 'tf-dev',
-        'HOST': 'db',
-        'PORT': '5432',
+        'HOST': 'localhost',
+        'PORT': '8003',
         'ATOMIC_REQUESTS': True,
         'CONN_MAX_AGE': 0,
     }

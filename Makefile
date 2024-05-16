@@ -23,6 +23,10 @@ migrate:
 migrations:
 	poetry run python -m src.manage makemigrations
 
+.PHONY: poetry-export
+poetry-export:
+	poetry export -f requirements.txt -o requirements.dev.txt --without-hashes --with dev,test
+
 .PHONY: run-server
 run-server:
 	poetry run python -m src.manage runserver

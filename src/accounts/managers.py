@@ -1,12 +1,12 @@
-import uuid
+import uuid as uuid_module
 
 from django.contrib.auth.base_user import BaseUserManager
 
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, uuid_val, username, email, **extra_fields):
-        if not uuid_val:
+    def create_user(self, uuid, username, email, **extra_fields):
+        if not uuid:
             raise ValueError('The UUID must be set')
 
         if not username:
@@ -17,7 +17,7 @@ class UserManager(BaseUserManager):
             raise ValueError('The Email must be set')
         email = self.normalize_email(email)
 
-        user = self.model(uuid=uuid_val, username=username, email=email, **extra_fields)
+        user = self.model(uuid=uuid, username=username, email=email, **extra_fields)
 
         # TODO: gotta change this later
         if extra_fields.get('is_staff', False) is False:
@@ -47,6 +47,6 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True')
 
-        uuid_val = uuid.uuid4()
+        uuid = uuid_module.uuid4()
 
-        return self.create_user(uuid_val, username, email, **extra_fields)
+        return self.create_user(uuid, username, email, **extra_fields)
