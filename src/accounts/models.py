@@ -21,6 +21,6 @@ class CustomizedTokenUser(TokenUser):
 
 
 class User(AbstractUser):
-    uuid = models.UUIDField(unique=True, editable=False)
+    uuid = models.UUIDField(unique=True)
     email = models.EmailField(unique=True)
     objects = UserManager()

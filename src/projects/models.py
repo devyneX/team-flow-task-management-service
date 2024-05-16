@@ -14,3 +14,8 @@ class Project(BaseModel, AuditModelMixin):  # type: ignore
 
     def __str__(self):
         return f'{self.name} - {self.owner}'
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.owner = self.created_by
+        super().save(*args, **kwargs)
