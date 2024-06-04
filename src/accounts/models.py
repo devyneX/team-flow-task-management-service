@@ -1,26 +1,15 @@
-from django.contrib.auth.models import AbstractUser
-from django.db import models
 from rest_framework_simplejwt.models import TokenUser
 
-from src.accounts.managers import UserManager
 
-
-class CustomizedTokenUser(TokenUser):
+class User(TokenUser):
 
     @property
     def name(self) -> str:
-        return self.token.get('name', '')
+        return self.token.get('first_name', '') + ' ' + self.token.get('last_name', '')
 
     @property
     def email(self) -> str:
         return self.token.get('email', '')
 
-    @property
-    def model_user(self):
-        return User.objects.get(uuid=self.id)
-
-
-class User(AbstractUser):
-    uuid = models.UUIDField(unique=True)
-    email = models.EmailField(unique=True)
-    objects = UserManager()
+    def __str__(self) -> str:
+        return self.username

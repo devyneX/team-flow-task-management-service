@@ -4,7 +4,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class SoftDeletionManager(models.Manager):
+class BaseModelManager(models.Manager):
 
     def get_queryset(self):
         return super().get_queryset().filter(deleted=False)
@@ -15,7 +15,7 @@ class BaseModel(models.Model):
     deleted = models.BooleanField(default=False,
                                   verbose_name=_('deleted'))
 
-    objects = SoftDeletionManager()
+    objects = BaseModelManager()
     all_objects = models.Manager()
 
     def delete(self, using=None, keep_parents=False):
@@ -30,31 +30,24 @@ class BaseModel(models.Model):
 
 
 class AuditTimeStampModel(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('created_at'))
-    updated_at = models.DateTimeField(auto_now=True, editable=False, verbose_name=_('updated_at'))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('created_at'))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('updated_at'))
 
     class Meta:
         abstract = True
 
 
 class AuditUserModel(models.Model):
-    created_by = models.OneToOneField(
-        'accounts.User',
-        on_delete=models.CASCADE,
-        related_name='created_by',
-        related_query_name='created_by',
-        verbose_name=_('created_by')
-    )
-    updated_by = models.OneToOneField(
-        'accounts.User',
-        on_delete=models.CASCADE,
-        related_name='updated_by',
-        related_query_name='updated_by',
-        verbose_name=_('updated_by')
-    )
+    created_by = models.UUIDField()
+    updated_by = models.UUIDField()
 
     class Meta:
         abstract = True
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.updated_by = self.created_by
+        super().save(*args, **kwargs)
 
 
 class AuditModelMixin(AuditTimeStampModel, AuditUserModel):
