@@ -24,7 +24,7 @@ class TestProjectModel(TestCase):
         for project in projects:
             Member.objects.create(project=project, user=user_uuid, added_by=user_uuid)
 
-        projects = Project.objects.get_for_user(user_uuid)
+        projects = Project.objects.for_user(user_uuid)
 
         self.assertEqual(projects.count(), 5)
 
@@ -36,7 +36,7 @@ class TestProjectModel(TestCase):
         for project in projects:
             Member.objects.create(project=project, user=member_uuid, added_by=user_uuid)
 
-        projects = Project.objects.get_for_user(member_uuid)
+        projects = Project.objects.for_user(member_uuid)
 
         self.assertEqual(projects.count(), 5)
 
@@ -66,30 +66,49 @@ class TestProjectModel(TestCase):
 
         projects, member_details = Project.objects.with_member_details()
 
-        print(projects, member_details)
+        # print(projects, member_details)
         self.assertEqual(projects.count(), 1)
         self.assertEqual(projects.first().members.count(), 6)
         # TODO: figure out how to test if the user details are correct
 
-    # def test_get_for_members_x_with_member_details(self):
-    # TODO: need to write a custom queryset to have this functionality
+    def test_get_for_user_x_with_member_details(self):
+        project1 = baker.make(Project, created_by=uuid.uuid4())
+        project2 = baker.make(Project, created_by=project1.owner)
 
-    #     project1 = baker.make(Project, created_by=uuid.uuid4())
-    #     project2 = baker.make(Project, created_by=project1.owner)
-    #
-    #     Member.objects.create(project=project1, user=project1.owner, added_by=project1.owner)
-    #     Member.objects.create(project=project2, user=project2.owner, added_by=project2.owner)
-    #
-    #     for _ in range(5):
-    #         Member.objects.create(project=project1, user=uuid.uuid4(), added_by=project1.owner)
-    #
-    #     for _ in range(5):
-    #         Member.objects.create(project=project2, user=uuid.uuid4(), added_by=project2.owner)
-    #
-    #     projects, member_details = Project.objects.get_for_user(project1.owner).with_member_details()
-    #
-    #     self.assertEqual(projects.count(), 2)
-    #     self.assertSequenceEqual(projects, [project1, project2])
-    #     self.assertEqual(projects[0].members.count(), 6)
-    #     self.assertEqual(projects[1].members.count(), 6)
-    #     print(member_details)
+        Member.objects.create(project=project1, user=project1.owner, added_by=project1.owner)
+        Member.objects.create(project=project2, user=project2.owner, added_by=project2.owner)
+
+        for _ in range(5):
+            Member.objects.create(project=project1, user=uuid.uuid4(), added_by=project1.owner)
+
+        for _ in range(5):
+            Member.objects.create(project=project2, user=uuid.uuid4(), added_by=project2.owner)
+
+        projects, member_details = Project.objects.for_user(project1.owner).with_member_details()
+
+        self.assertEqual(projects.count(), 2)
+        self.assertSequenceEqual(projects, [project1, project2])
+        self.assertEqual(projects[0].members.count(), 6)
+        self.assertEqual(projects[1].members.count(), 6)
+        # print(member_details)
+
+
+class TestMemberModel(TestCase):
+
+    def test_for_project(self):
+        pass
+
+    def test_with_details(self):
+        pass
+
+    def test_for_project_x_with_details(self):
+        project = baker.make(Project)
+        Member.objects.create(project=project, user=project.owner, added_by=project.owner)
+
+        for _ in range(5):
+            Member.objects.create(project=project, user=uuid.uuid4(), added_by=project.owner)
+
+        members = Member.objects.for_project(project).with_details()
+
+        self.assertEqual(len(members), 6)
+        # TODO: figure out how to test if the user details are correct

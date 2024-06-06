@@ -3,7 +3,7 @@ from unittest import TestCase
 import requests.exceptions
 from rest_framework.exceptions import ValidationError
 
-from src.projects.utils import get_user_detail_from_id, get_user_detail_from_ids
+from src.accounts.utils import get_user_detail_from_id, get_user_detail_from_ids
 
 
 class TestUserAPIUtils(TestCase):
